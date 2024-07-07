@@ -6,4 +6,8 @@
     margin: 0;
     padding: 0;
   }
+
+  :global(html, body) {
+    overflow: hidden;
+  }
 </style>
