@@ -1,12 +1,13 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { init } from '$lib/pixi';
-  
+  import Canvas from '$lib/canvas';
+
   let canvasContainer: HTMLDivElement;
 
-  onMount(async () => {
-    const canvas = await init();
-    canvasContainer.appendChild(canvas);
+  onMount(() => {
+    Canvas.init(canvasContainer);
+
+    return () => Canvas.destroy()
   });
 </script>
 
