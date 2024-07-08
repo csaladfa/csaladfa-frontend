@@ -8,14 +8,17 @@ class Canvas {
   async init(container: HTMLDivElement): Promise<void> {
     this.app = new Application();
 
-    await this.app.init({ resizeTo: window, backgroundColor: 0xfff, backgroundAlpha: 0 });
+    await this.app.init({ resizeTo: window, backgroundColor: 0xefefef, backgroundAlpha: 0 });
     container.appendChild(this.app.canvas);
 
-    this.createScrollBox();
+    // this.createScrollBox();
+    this.createNode();
+    this.addEventListeners();
   }
 
   async destroy(): Promise<void> {
     this.app.destroy();
+    this.destroyEventListeners();
   }
 
   private createScrollBox(): void {
@@ -36,7 +39,20 @@ class Canvas {
       .fill(0x666666)
       .stroke({ color: 0x000, width: 4, alignment: 0 });
 
-    this.scrollBox.addItem(node);
+    this.app.stage.addChild(node);
+  }
+
+  private handleScroll(): void {
+    this.app.stage.scale.set(0.5, 0.5);
+    console.log('scroll');
+  }
+
+  addEventListeners(): void {
+    window.addEventListener('mousewheel', this.handleScroll.bind(this));
+  }
+
+  destroyEventListeners(): void {
+    window.removeEventListener('mousewheel', this.handleScroll);
   }
 }
 
