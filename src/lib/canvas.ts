@@ -1,10 +1,12 @@
-import { Application, Container, Graphics, type ContainerChild } from 'pixi.js';
-import { ScrollBox } from '@pixi/ui';
+import { Application, Graphics } from 'pixi.js';
 import Node from './Node';
 import { clamp } from './utils';
 
 class Canvas {
   private app: Application;
+
+  private boundScrollListener: ((event: WheelEvent) => void) | undefined;
+
   private scale: number = 1;
 
   constructor() {
@@ -44,17 +46,15 @@ class Canvas {
   }
 
   addEventListeners(): void {
-    const boundListener = this.handleScroll.bind(this);
+    this.boundScrollListener = this.handleScroll.bind(this);
 
-    // @ts-ignore
-    window.addEventListener('wheel', boundListener, {
+    window.addEventListener('wheel', this.boundScrollListener, {
       passive: false,
     });
   }
 
   destroyEventListeners(): void {
-    // @ts-ignore
-    window.removeEventListener('wheel', this.handleScroll);
+    this.boundScrollListener && window.removeEventListener('wheel', this.boundScrollListener);
   }
 }
 
