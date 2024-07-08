@@ -6,7 +6,14 @@ class Canvas {
   private app: Application;
 
   private boundScrollListener: ((event: WheelEvent) => void) | undefined;
+  private boundDragListener: ((event: MouseEvent) => void) | undefined;
 
+  private readonly TRANSFORM_SPEED: number = 1.5;
+  private readonly SCALE_SPEED: number = 0.005;
+  private readonly MAX_SCALE: number = 2;
+  private readonly MIN_SCALE: number = 0.5;
+
+  private transform: { x: number; y: number } = { x: 0, y: 0 };
   private scale: number = 1;
 
   constructor() {
@@ -32,7 +39,7 @@ class Canvas {
     this.renderNode(node);
   }
 
-  renderNode(node: Graphics): void {
+  renderNode(node: Node): void {
     this.app.stage.addChild(node);
   }
 
@@ -40,22 +47,50 @@ class Canvas {
     event.preventDefault();
 
     requestAnimationFrame(() => {
-      this.scale = clamp(this.scale + event.deltaY * 0.005, 1, 2);
+      const { scale, SCALE_SPEED, MIN_SCALE, MAX_SCALE } = this;
+
+      this.scale = clamp(scale + event.deltaY * SCALE_SPEED, MIN_SCALE, MAX_SCALE);
       this.app.stage.scale.set(this.scale, this.scale);
     });
   }
 
-  addEventListeners(): void {
+  private handleDrag(event: MouseEvent): void {
+    if (event.buttons !== 1) {
+      return;
+    }
+
+    event.preventDefault();
+
+    requestAnimationFrame(() => {
+      const { movementX, movementY } = event;
+      const { x, y } = this.transform;
+
+      this.transform = {
+        x: x + movementX * this.TRANSFORM_SPEED,
+        y: y + movementY * this.TRANSFORM_SPEED,
+      };
+
+      this.app.stage.position.set(this.transform.x, this.transform.y);
+    });
+  }
+
+  private addEventListeners(): void {
     this.boundScrollListener = this.handleScroll.bind(this);
+    this.boundDragListener = this.handleDrag.bind(this);
 
     this.app.canvas.addEventListener('wheel', this.boundScrollListener, {
       passive: false,
     });
+    this.app.canvas.addEventListener('mousemove', this.boundDragListener);
   }
 
-  destroyEventListeners(): void {
+  private destroyEventListeners(): void {
     if (this.boundScrollListener) {
       this.app.canvas.removeEventListener('wheel', this.boundScrollListener);
+    }
+
+    if (this.boundDragListener) {
+      this.app.canvas.removeEventListener('mousemove', this.boundDragListener);
     }
   }
 }
