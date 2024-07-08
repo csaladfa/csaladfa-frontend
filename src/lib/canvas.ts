@@ -22,8 +22,8 @@ class Canvas {
   }
 
   async destroy(): Promise<void> {
-    this.app.destroy(true);
     this.destroyEventListeners();
+    this.app.destroy(true);
   }
 
   createNode(): void {
@@ -48,13 +48,15 @@ class Canvas {
   addEventListeners(): void {
     this.boundScrollListener = this.handleScroll.bind(this);
 
-    window.addEventListener('wheel', this.boundScrollListener, {
+    this.app.canvas.addEventListener('wheel', this.boundScrollListener, {
       passive: false,
     });
   }
 
   destroyEventListeners(): void {
-    this.boundScrollListener && window.removeEventListener('wheel', this.boundScrollListener);
+    if (this.boundScrollListener) {
+      this.app.canvas.removeEventListener('wheel', this.boundScrollListener);
+    }
   }
 }
 
