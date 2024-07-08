@@ -1,58 +1,60 @@
-import { Application, Container, Graphics } from 'pixi.js';
+import { Application, Container, Graphics, type ContainerChild } from 'pixi.js';
 import { ScrollBox } from '@pixi/ui';
+import Node from './Node';
+import { clamp } from './utils';
 
 class Canvas {
   private app: Application;
-  private scrollBox: ScrollBox;
+  private scale: number = 1;
+
+  constructor() {
+    this.app = new Application();
+  }
 
   async init(container: HTMLDivElement): Promise<void> {
-    this.app = new Application();
-
     await this.app.init({ resizeTo: window, backgroundColor: 0xefefef, backgroundAlpha: 0 });
     container.appendChild(this.app.canvas);
 
-    // this.createScrollBox();
     this.createNode();
     this.addEventListeners();
   }
 
   async destroy(): Promise<void> {
-    this.app.destroy();
+    this.app.destroy(true);
     this.destroyEventListeners();
   }
 
-  private createScrollBox(): void {
-    this.scrollBox = new ScrollBox({
-      background: 0x444,
-      width: this.app.screen.width,
-      height: this.app.screen.height,
-    });
+  createNode(): void {
+    const node = new Node();
 
-    new Array(100).fill(0).forEach(() => this.createNode());
-
-    this.app.stage.addChild(this.scrollBox);
+    this.renderNode(node);
   }
 
-  createNode(): void {
-    const node = new Graphics()
-      .rect(0, 0, 208, 208)
-      .fill(0x666666)
-      .stroke({ color: 0x000, width: 4, alignment: 0 });
-
+  renderNode(node: Graphics): void {
     this.app.stage.addChild(node);
   }
 
-  private handleScroll(): void {
-    this.app.stage.scale.set(0.5, 0.5);
-    console.log('scroll');
+  private handleScroll(event: WheelEvent): void {
+    event.preventDefault();
+
+    requestAnimationFrame(() => {
+      this.scale = clamp(this.scale + event.deltaY * 0.005, 1, 2);
+      this.app.stage.scale.set(this.scale, this.scale);
+    });
   }
 
   addEventListeners(): void {
-    window.addEventListener('mousewheel', this.handleScroll.bind(this));
+    const boundListener = this.handleScroll.bind(this);
+
+    // @ts-ignore
+    window.addEventListener('wheel', boundListener, {
+      passive: false,
+    });
   }
 
   destroyEventListeners(): void {
-    window.removeEventListener('mousewheel', this.handleScroll);
+    // @ts-ignore
+    window.removeEventListener('wheel', this.handleScroll);
   }
 }
 
