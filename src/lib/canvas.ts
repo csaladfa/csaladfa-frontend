@@ -47,10 +47,15 @@ class Canvas {
     event.preventDefault();
 
     requestAnimationFrame(() => {
+      const { clientX, clientY } = event;
       const { scale, SCALE_SPEED, MIN_SCALE, MAX_SCALE } = this;
 
       this.scale = clamp(scale + event.deltaY * SCALE_SPEED, MIN_SCALE, MAX_SCALE);
       this.app.stage.scale.set(this.scale, this.scale);
+      this.app.stage.position.set(
+        clientX - (clientX - this.transform.x) * this.scale,
+        clientY - (clientY - this.transform.y) * this.scale,
+      );
     });
   }
 
