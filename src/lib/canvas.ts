@@ -24,8 +24,10 @@ class Canvas {
     await this.app.init({ resizeTo: window, backgroundColor: 0xefefef, backgroundAlpha: 0 });
     container.appendChild(this.app.canvas);
 
+    this.createEventListeners();
+
     this.createNode();
-    this.addEventListeners();
+
   }
 
   async destroy(): Promise<void> {
@@ -34,13 +36,11 @@ class Canvas {
   }
 
   createNode(): void {
-    const node = new Node();
+    const node = new Node(this.app.stage);
 
-    this.renderNode(node);
-  }
+    node.render();
 
-  renderNode(node: Node): void {
-    this.app.stage.addChild(node);
+    node.addChildNodes(3)
   }
 
   private handleScroll(event: WheelEvent): void {
@@ -74,7 +74,7 @@ class Canvas {
     });
   }
 
-  private addEventListeners(): void {
+  private createEventListeners(): void {
     this.boundScrollListener = this.handleScroll.bind(this);
     this.boundDragListener = this.handleDrag.bind(this);
 
