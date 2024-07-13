@@ -23,7 +23,7 @@ export default class Node extends Graphics {
       return childNode;
     });
 
-    super.addChild(...children);
+    this.stage.addChild(...children);
     this.descendents.push(...children);
   }
 

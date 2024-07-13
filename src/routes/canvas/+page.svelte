@@ -1,13 +1,13 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import Canvas from '$lib/canvas';
+  import Controller from '$lib/canvas/Controller';
 
   let canvasContainer: HTMLDivElement;
 
   onMount(() => {
-    Canvas.init(canvasContainer);
+    Controller.init(canvasContainer);
 
-    return () => Canvas.destroy()
+    return () => Controller.destroy()
   });
 </script>
 
