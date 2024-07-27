@@ -1,0 +1,42 @@
+[
+    {
+        "id": 0,
+        "name": "Grandparent",
+        "children": [
+            "1"
+        ]
+    },
+    {
+        "id": 1,
+        "name": "John Doe",
+        "children": [
+            "3",
+            "4"
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Jane Doe",
+        "children": [
+            "3",
+            "4"
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Alice",
+        "children": []
+    },
+    {
+        "id": 4,
+        "name": "Bob",
+        "children": [
+            "5"
+        ]
+    },
+    {
+        "id": 5,
+        "name": "Charlie",
+        "children": []
+    }
+]
