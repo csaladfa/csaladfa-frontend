@@ -1,7 +1,7 @@
-import GraphNode from './node';
+import DataNode from './node';
 
-class Graph {
-  nodes: Map<string, GraphNode>;
+export default class Graph {
+  nodes: Map<string, DataNode>;
 
   constructor() {
     this.nodes = new Map();
@@ -14,17 +14,22 @@ class Graph {
       return node;
     }
 
-    node = new GraphNode(id);
+    node = new DataNode(id);
     this.nodes.set(id, node);
     return node;
   }
 
-  addEdge(source: GraphNode, destination: GraphNode) {
+  addChild(source: DataNode, destination: DataNode) {
     const sourceNode = this.addNode(source.id);
     const destinationNode = this.addNode(destination.id);
 
-    sourceNode.addEdge(destinationNode);
+    sourceNode.addChild(destinationNode);
+    destinationNode.addParent(sourceNode);
 
     return [sourceNode, destinationNode];
+  }
+
+  getNodes() {
+    return this.nodes;
   }
 }

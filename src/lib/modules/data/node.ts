@@ -1,13 +1,19 @@
-export default class GraphNode {
+export default class DataNode {
   id: string;
-  edges: Set<GraphNode>;
+  parents: Set<DataNode>;
+  children: Set<DataNode>;
 
   constructor(id: string) {
     this.id = id;
-    this.edges = new Set();
+    this.parents = new Set();
+    this.children = new Set();
   }
 
-  addEdge(node: GraphNode) {
-    this.edges.add(node);
+  addChild(node: DataNode) {
+    this.children.add(node);
+  }
+
+  addParent(node: DataNode) {
+    this.parents.add(node);
   }
 }

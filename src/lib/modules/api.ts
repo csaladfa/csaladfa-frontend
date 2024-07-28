@@ -1,9 +1,9 @@
 import dummy from '$lib/assets/dummy.json';
 
-export function getAll() {
+export function fetchAll() {
   return dummy;
 }
 
-export function getById(id: number) {
+export function fetchById(id: number) {
   return dummy.find((item) => item.id === id);
 }
