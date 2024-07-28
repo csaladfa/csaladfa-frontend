@@ -34,11 +34,14 @@ class Controller {
 
     const graph = buildGraph();
 
-    // graph.getNodes().values((node) => {
-    //   const graphNode = new GraphNode(this.app.stage, node);
+    graph.getNodes().forEach((node) => {
+      const graphNode = new GraphNode(this.app.stage, node);
+      const childrenSize = node.children.size;
 
-    //   graphNode.render();
-    // });
+      graphNode.setOffset(childrenSize * 100, node.level * 100);
+
+      graphNode.render();
+    });
   }
 
   async destroy(): Promise<void> {
@@ -48,16 +51,6 @@ class Controller {
 
   getOnClickHandler(): ((event: GraphNode) => void) | undefined {
     return this.onClickHandler;
-  }
-
-  createNode(): void {
-    if (!this.onClickHandler) {
-      return;
-    }
-
-    const node = new GraphNode(this.app.stage);
-
-    node.render();
   }
 
   private handleScroll(event: WheelEvent): void {

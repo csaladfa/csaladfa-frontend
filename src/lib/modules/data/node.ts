@@ -3,6 +3,8 @@ export default class DataNode {
   parents: Set<DataNode>;
   children: Set<DataNode>;
 
+  level: number = 0;
+
   constructor(id: string) {
     this.id = id;
     this.parents = new Set();
